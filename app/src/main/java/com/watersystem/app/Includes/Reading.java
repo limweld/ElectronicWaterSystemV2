@@ -18,7 +18,8 @@ public class Reading {
     private final String READING_CUSTOMERS_ID = "customer_id";
     private final String READING_CUSTOMERS_FULLNAME = "fullname";
     private final String READING_BILLING_PERIOD_ID = "billing_period_id";
-    private final String READING_EMPLOYEE_ID = "employee_id";    private final String READING_BILLING_DATE = "billing_date";
+    private final String READING_EMPLOYEE_ID = "employee_id";
+    private final String READING_BILLING_DATE = "billing_date";
 
     private final String READING_PREVIOUS_BALANCE = "previous_balance";
     private final String READING_PREVIOUS_METER = "previous_reading";
@@ -575,7 +576,7 @@ public class Reading {
     }
 
 
-    public List<String> get_List_Data_Reading_Filter(String filter, String status)
+    public List<String> get_List_Data_Reading_Filter(String filter, String status, String employee_id)
     {
         List<String> dataArrays = new ArrayList();
         Cursor cursor;
@@ -584,6 +585,7 @@ public class Reading {
             cursor = db.query(
                     READING_TABLE,
                     new String[]{READING_CUSTOMERS_FULLNAME,READING_ID,READING_CUSTOMERS_ID,READING_LOCATION},
+                    READING_EMPLOYEE_ID+ "='"+ employee_id +"' AND "+
                     READING_SYNCH_STATUS+ "='"+ status +"' AND ("+
                     READING_CUSTOMERS_ID + " Like '%" + filter + "%' OR "+
                     READING_CUSTOMERS_FULLNAME + " Like '%" + filter + "%' OR "+

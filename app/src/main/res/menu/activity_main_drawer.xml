@@ -3,29 +3,43 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_download"
-            android:icon="@drawable/ic_file_download_black_24dp"
-            android:title="DOWNLOAD" />
-        <item
-            android:id="@+id/nav_upload"
-            android:icon="@drawable/ic_file_upload_black_24dp"
-            android:title="UPLOAD" />
-        <item
-            android:id="@+id/nav_pair"
-            android:icon="@drawable/ic_bluetooth_black_24dp"
-            android:title="PAIR" />
-        <item
-            android:id="@+id/nav_info"
-            android:icon="@drawable/ic_info_outline_black_24dp"
-            android:title="INFO" />
+            android:id="@+id/nav_profile"
+            android:icon="@drawable/ic_account_circle_black_24dp"
+            android:title="None"
+            android:visible="false"/>
     </group>
 
+    <item android:title="Tools">
+        <menu>
+            <item
+                android:id="@+id/nav_download"
+                android:icon="@drawable/ic_file_download_black_24dp"
+                android:title="DOWNLOAD" />
+            <item
+                android:id="@+id/nav_upload"
+                android:icon="@drawable/ic_file_upload_black_24dp"
+                android:title="UPLOAD" />
+            <item
+                android:id="@+id/nav_pair"
+                android:icon="@drawable/ic_bluetooth_black_24dp"
+                android:title="PAIR" />
+            <item
+                android:id="@+id/nav_info"
+                android:icon="@drawable/ic_info_outline_black_24dp"
+                android:title="INFO" />
+        </menu>
+    </item>
     <item android:title="Account">
         <menu>
             <item
                 android:id="@+id/nav_database"
                 android:icon="@drawable/ic_storage_black_24dp"
                 android:title="Reset" />
+
+            <item
+                android:id="@+id/nav_settings"
+                android:icon="@drawable/ic_settings_black_24dp"
+                android:title="Settings" />
 
             <item
                 android:id="@+id/nav_logout"

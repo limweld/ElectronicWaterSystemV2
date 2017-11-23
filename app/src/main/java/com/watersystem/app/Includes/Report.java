@@ -140,7 +140,7 @@ public class Report {
         return label + str;
     }
     public String getPrevious_reading() {
-        String label = "Bill From : ";
+        String label = "Prev Rdg  : ";
         String	str = previous_reading;
 
         for (int x =0; x < strLength - (previous_reading.length() + label.length()); x++ ){
@@ -164,7 +164,7 @@ public class Report {
 
 
     public String getCurrent_reading() {
-        String label = "Bill To   : ";
+        String label = "Curr Rdg  : ";
         String	str = current_reading;
 
         for (int x =0; x < strLength - (current_reading.length() + label.length()); x++ ){
@@ -326,11 +326,11 @@ public class Report {
     public String parseHeader(){
 
         return     "                                "
-                +  "       CITY OF GIHULNGAN        "
+                +  "      CITY OF GUIHULNGAN        "
                 +  "        NEGROS ORIENTAL         "
                 +  "                                "
                 +  "         Office of The          "
-                +  "      Workworks Operation       "
+                +  "      Waterworks Operation      "
                 +  "                                "
                 +  "      W A T E R   B I L L       "
                 +  "                                ";

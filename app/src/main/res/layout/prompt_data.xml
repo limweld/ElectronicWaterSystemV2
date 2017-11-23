@@ -2,6 +2,7 @@
 
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent" >
 
@@ -56,7 +57,7 @@
             <EditText
                 android:id="@+id/reading_meter_id"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
 
         </LinearLayout>
     </LinearLayout>
@@ -88,7 +89,7 @@
             <EditText
                 android:id="@+id/reading_customer_id"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
         </LinearLayout>
 
 
@@ -111,7 +112,7 @@
             <EditText
                 android:id="@+id/reading_id"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
 
         </LinearLayout>
     </LinearLayout>
@@ -207,10 +208,11 @@
                     android:layout_weight=".25"
                     android:orientation="vertical">
 
-                <EditText
-                    android:id="@+id/reading_billing_date"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    <EditText
+                        android:id="@+id/reading_billing_date"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/colorPrimary" />
 
 
                 </LinearLayout>
@@ -310,7 +312,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="numberDecimal"
-                android:maxLength="10"/>
+                android:maxLength="10"
+                android:textColor="@color/colorPrimary"
+                android:textColorHighlight="@color/colorPrimary"
+                android:textColorHint="@color/colorPrimary" />
 
 
         </LinearLayout>

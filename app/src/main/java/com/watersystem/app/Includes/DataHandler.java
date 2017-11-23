@@ -11,7 +11,7 @@ public class DataHandler {
     public static SQLiteDatabase db;
 
     private final String DBNAME = "water_system";
-    private final int DBVER = 37;
+    private final int DBVER = 42;
 
     //READING TABLE
     private final String READING_TABLE = "reading";

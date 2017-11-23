@@ -1,5 +1,7 @@
 package com.watersystem.app;
 
+import android.Manifest;
+import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
@@ -8,6 +10,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -22,6 +25,8 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -35,6 +40,8 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -93,6 +100,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static com.watersystem.app.Includes.Config.getUrl;
+
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener ,OnItemSelectedListener,SurfaceHolder.Callback {
 
     private BlueToothService mBTService = null;
@@ -144,25 +153,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private EditText search_Box;
     private Spinner filter_Type;
     private ListView listView;
-
-    private Button button_Setting;
     private Button synch;
 
     private static DataHandler db;
-
-    TextView testView;
 
     Camera camera;
     SurfaceView surfaceView;
     SurfaceHolder surfaceHolder;
 
-    PictureCallback rawCallback;
-    ShutterCallback shutterCallback;
-    PictureCallback jpegCallback;
-
     PictureCallback padsAddedPicCallback;
 
-    private ProgressDialog progress;
     private String reading_id;
 
     TableLayout country_table;
@@ -171,7 +171,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     TextView t1, t2,t3, t4;
 
     ProgressDialog globaldialog;
-
 
     private String
         var_id,
@@ -184,7 +183,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         var_receipt_no;
 
     private Bitmap btmp;
-
     private String encoded_string;
 
     private String KEY_IMAGE = "image";
@@ -197,6 +195,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private String KEY_BILL_TO = "billto";
     private String KEY_CASHTENDERED = "cashtendered";
     private String KEY_RECEIPT = "receipt_number";
+
+    private String password;
 
     public MainActivity(){
         //dialog = new ProgressDialog(activity);can not resolve symbol R
@@ -217,6 +217,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+
 
         //----------------------------
 
@@ -371,68 +373,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
 
         bt_2d = (Button) findViewById(R.id.bt_2d);
-//       bt_2d.setOnClickListener(new OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                // TODO Auto-generated method stub
-//
-//                if (mBTService.getState() != mBTService.STATE_CONNECTED) {
-//                    Toast.makeText(
-//                            MainActivity.this,
-//                            MainActivity.this.getResources().getString(
-//                                    R.string.str_unconnected),  Toast.LENGTH_LONG).show();
-//                    return;
-//                }
-//                String message = edit.getText().toString();
-//                if (message.length() > 0) {
-//
-//                    try {
-//                        message = new String(message.getBytes("utf8"));
-//                    } catch (UnsupportedEncodingException e1) {
-//                        // TODO Auto-generated catch block
-//                        e1.printStackTrace();
-//                    }
-//
-//                    btMap = BarcodeCreater.encode2dAsBitmap(message, 384, 384,
-//                            2);
-//                    BarcodeCreater.saveBitmap2file(btMap, "mypic1.JPEG");
-//                    iv.setImageBitmap(btMap);
-//
-//                }
-//            }
-//        });
 
         bt_bar = (Button) findViewById(R.id.bt_bar);
-//        bt_bar.setOnClickListener(new OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                // TODO Auto-generated method stub
-//                if (mBTService.getState() != mBTService.STATE_CONNECTED) {
-//                    Toast.makeText(
-//                            MainActivity.this,
-//                            MainActivity.this.getResources().getString(
-//                                    R.string.str_unconnected),  Toast.LENGTH_LONG).show();
-//                    return;
-//                }
-//                String message = edit.getText().toString();
-//
-//                if (message.getBytes().length > message.length()) {
-//                    Toast.makeText(
-//                            MainActivity.this,
-//                            MainActivity.this.getResources().getString(
-//                                    R.string.str_cannotcreatebar),  Toast.LENGTH_LONG).show();
-//                    return;
-//                }
-//                if (message.length() > 0) {
-//
-//                    btMap = BarcodeCreater.creatBarcode(MainActivity.this,
-//                            message, 384, 120, true, 1);// 最后一位参数是条码格式 The last parameter is the barcode format
-//                    iv.setImageBitmap(btMap);
-//
-//                }
-//
-//            }
-//        });
 
 
         mBTService = new BlueToothService(this, mhandler);// 创建对象的时候必须有一个是Handler类型 When creating an object, there must be Handler Types of
@@ -510,9 +452,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                                 R.string.str_open));
                             }
                         });
-
                     }
-
                 }
             }
         };
@@ -1036,10 +976,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             }
                         });
 
-
-
-
-
                         surfaceHolder.addCallback(new SurfaceHolder.Callback() {
 
                             @Override
@@ -1140,26 +1076,39 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                         if(previous <= current) {
 
-                            Reading reading = new Reading(
-                                    reading_id.getText().toString(),
-                                    reading_current_meter.getText().toString(),
-                                    reading_current_balance.getText().toString(),
-                                    "Pending",
-                                    reading_cashtendered.getText().toString(),
-                                    reading_reciept_no.getText().toString(),
-                                    reading_billing_date.getText().toString(),
-                                    reading_bill_to.getText().toString()
-                            );
+                            //// CONDITION
 
-                            reading.update_Reading_Current_Balance();
+                            File f = new File("/sdcard/water_system/"+ getReading_id() +".png");
 
-                            list_Reading_data(
-                                    search_Box.getText().toString(),
-                                    filter_Type.getSelectedItem().toString());
+                            if(f.exists()) {
 
-                            Toast.makeText(getApplicationContext(),"Updated ", Toast.LENGTH_LONG  ).show();
+                                Reading reading = new Reading(
+                                        reading_id.getText().toString(),
+                                        reading_current_meter.getText().toString(),
+                                        reading_current_balance.getText().toString(),
+                                        "Pending",
+                                        reading_cashtendered.getText().toString(),
+                                        reading_reciept_no.getText().toString(),
+                                        reading_billing_date.getText().toString(),
+                                        reading_bill_to.getText().toString()
+                                );
 
-                            alertDialog.cancel();
+                                reading.update_Reading_Current_Balance();
+
+                                list_Reading_data(
+                                        search_Box.getText().toString(),
+                                        filter_Type.getSelectedItem().toString());
+
+                                Toast.makeText(getApplicationContext(),"Updated ", Toast.LENGTH_LONG  ).show();
+
+                                alertDialog.cancel();
+
+                            }else{
+                                Toast.makeText(getApplicationContext(), "No Picture ! ", Toast.LENGTH_LONG).show();
+                            }
+
+                            ///// CONDITION
+
                         }else{
                             Toast.makeText(getApplicationContext(), "Previous Meter : "+
                                     reading_previous_meter.getText().toString(), Toast.LENGTH_LONG).show();
@@ -1191,6 +1140,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         // show it
                         alertDialog.show();
 
+
                         button_calendar_save.setOnClickListener(new OnClickListener() {
                             @Override
                             public void onClick(View view) {
@@ -1205,6 +1155,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             @Override
                             public void onClick(View view) {
                                 alertDialog.cancel();
+
                             }
                         });
 
@@ -1251,8 +1202,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 alertDialog.cancel();
                             }
                         });
-
-
                     }
                 });
 
@@ -1443,6 +1392,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
       //  country_table=(TableLayout)findViewById(R.id.country_table);
       //  fillCountryTable();
+
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -1589,13 +1539,88 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             Intent intent = new Intent(MainActivity.this, LoginActivity.class);
             startActivity(intent);
             finish();
+        } else if ( id == R.id.nav_settings){
+
+            ////////////////////////////
+            /////SETTINGS PROMPT////////
+            ////////////////////////////
+            LayoutInflater li = LayoutInflater.from(context);
+            View promptsView = li.inflate(R.layout.promp_settings,  null, false);
+
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+            alertDialogBuilder.setView(promptsView);
+
+            final Button btn_changeSettings = promptsView.findViewById(R.id.button_changePassword);
+
+            final EditText input_keyWordOldPassword = promptsView.findViewById(R.id.input_oldpass);
+            final EditText input_keyWordNewPassword = promptsView.findViewById(R.id.input_keynewpass);
+            final EditText input_keyWordConfirmPassword = promptsView.findViewById(R.id.input_keyconfrimpass);
+
+            final AlertDialog alertDialog = alertDialogBuilder.create();
+            alertDialog.show();
+
+            btn_changeSettings.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    String old_valid = (input_keyWordOldPassword.getText().toString().matches(""))? "Empty oldPass \n" : "";
+                    String new_valid = (input_keyWordNewPassword.getText().toString().matches(""))? "Empty newPass \n" : "";
+                    String confirm_valid = (input_keyWordConfirmPassword.getText().toString().matches(""))? "Empty confirmPass \n" : "";
+
+                    if( input_keyWordOldPassword.getText().toString().matches("") ||
+                        input_keyWordNewPassword.getText().toString().matches("")||
+                        input_keyWordConfirmPassword.getText().toString().matches("")){
+
+                        Toast.makeText(getApplicationContext(), old_valid + new_valid  + confirm_valid , Toast.LENGTH_SHORT).show();
+
+                    }else{
+
+                        User user = User.getUser_Status("1");
+
+                        if(input_keyWordOldPassword.getText().toString().matches(user.getPassword())) {
+
+                            if (input_keyWordNewPassword.getText().toString().matches(input_keyWordConfirmPassword.getText().toString())) {
+
+                                password =  input_keyWordConfirmPassword.getText().toString();
+
+
+                                Api api = Api.getApi("1");
+
+                                Config config = new Config();
+                                config.setUrl_Change_Password(api.getIp());
+
+                                Get_Update_Password get_password_update = new Get_Update_Password(MainActivity.this);
+                                get_password_update.execute(config.getUrl_Change_Password()+"?user="+user.getUser_id()+"&newpass="+input_keyWordConfirmPassword.getText().toString());
+
+                                input_keyWordOldPassword.setText("");
+                                input_keyWordNewPassword.setText("");
+                                input_keyWordConfirmPassword.setText("");
+
+                                alertDialog.cancel();
+
+
+                            } else {
+                                Toast.makeText(getApplicationContext(), "Confirm Pass Not Match ", Toast.LENGTH_SHORT).show();
+                            }
+                        }else{
+                            Toast.makeText(getApplicationContext(), "Old Pass Not Match ", Toast.LENGTH_SHORT).show();
+                        }
+
+                    }
+                }
+            });
         }
+
+        //User user_profile = User.getUser_Status("1");
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
+
         return true;
+
     }
 
+    //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
     public static Bitmap resizeImage(Bitmap bitmap, int w, int h) {
         Bitmap BitmapOrg = bitmap;
@@ -1618,15 +1643,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (requestCode == REQUEST_EX && resultCode == RESULT_OK
                 && null != data) {
             Uri selectedImage = data.getData();
-            // String[] filePathColumn = { MediaStore.Images.Media.DATA };
-            // Cursor cursor = getContentResolver().query(selectedImage,
-            // filePathColumn, null, null, null);
-            // cursor.moveToFirst();
-            // int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-            // String picturePath = cursor.getString(columnIndex);
-            // picPath = picturePath;
-            // // iv.setImageURI(selectedImage);
-            // btMap = BitmapFactory.decodeFile(picPath);
             ContentResolver cr = this.getContentResolver();
 
             try {
@@ -1664,15 +1680,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public void onBackPressed() {
 
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-
             off_flag();
-            //System.exit(0);
-
             super.onBackPressed();
         }
 
@@ -1693,8 +1705,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public void list_Reading_data(String filter, String status_synch){
 
+        User user = User.getUser_Status("1");
+
+
         Reading reading = new Reading();
-        List<String> var = reading.get_List_Data_Reading_Filter(filter, status_synch);
+        List<String> var = reading.get_List_Data_Reading_Filter(filter, status_synch,user.getUser_id());
 
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(this, R.layout.support_simple_spinner_dropdown_item, var);
         dataAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
@@ -1796,12 +1811,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    //public void captureImage(View v) throws IOException {
-        //take the picture
-    //    padsAddedPicCallback = getPictureCallback();
-    //    camera.takePicture(null, null, padsAddedPicCallback);
-    //}
-
     public void api_Download() {
 
         Api api = Api.getApi("1");
@@ -1853,11 +1862,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 (float) 1, getResources().getDisplayMetrics());
 
         addTableRows(
-                "MIN__ RATE",
-                "CUBIC MIN",
-                "PER__ CUBIC",
-                "TYPE",
-                dip
+                "Minrate ",
+                "CubicMin ",
+                "PerCubic ",
+                "Type "
         );
 
         Rate r = new Rate();
@@ -1873,13 +1881,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         row.get(2).toString(),
                         row.get(3).toString(),
                         row.get(4).toString(),
-                        row.get(0).toString()+" "+row.get(1).toString(),
-                        dip
+                        row.get(0).toString()+" "+row.get(1).toString()
                 );
             }
     }
 
-    void addTableRows (String s1, String s2, String s3, String s4,int dip){
+    void addTableRows (String s1, String s2, String s3, String s4){
         row = new TableRow(this);
 
         t1 = new TextView(this);
@@ -1891,16 +1898,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         t2.setText(s2);
         t3.setText(s3);
         t4.setText(s4);
-
-        t1.setTypeface(null, 1);
-        t2.setTypeface(null, 1);
-        t3.setTypeface(null, 1);
-        t4.setTypeface(null, 1);
-
-        t1.setWidth(30 * dip);
-        t2.setWidth(30 * dip);
-        t3.setWidth(70 * dip);
-        t4.setWidth(200 * dip);
 
         row.addView(t1);
         row.addView(t2);
@@ -1959,7 +1956,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             @Override
             public void onPictureTaken(byte[] data, Camera camera) {
-                //FileOutputStream outStream = null;
                 try {
 
                     FileOutputStream outStream = new FileOutputStream(String.format("/sdcard/water_system/" + getReading_id() + ".png"));
@@ -2126,5 +2122,53 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         requestQueue.add(request);
     }
 
+    public class Get_Update_Password   extends AsyncTask<String, Void, String> {
+        private ProgressDialog dialog;
 
+        public Get_Update_Password(MainActivity activity) { dialog = new ProgressDialog(activity);}
+
+        @Override
+        protected String doInBackground(String... urls) {
+            return getUrl(urls[0]);
+        }
+
+        @Override
+        protected void onPreExecute() {
+            dialog.setMessage("Updating");
+            dialog.show();
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+
+            try {
+                JSONObject obj = new JSONObject(result);
+                String status = (String) obj.get("status");
+                if("success".matches(status)){
+                    User user = User.getUser_Status("1");
+
+                    User update_user = new User(user.getUser_id(),password);
+                    update_user.update_Password();
+
+                    Toast.makeText(getApplicationContext(), "Update Successfully ! ", Toast.LENGTH_LONG).show();
+                }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+                Toast.makeText(getApplicationContext(), "Error !", Toast.LENGTH_LONG).show();
+            }
+
+            if (dialog.isShowing()) {
+                dialog.dismiss();
+            }
+        }
+
+        @Override
+        protected void onCancelled() {
+        }
+    }
+
+    private void setPermission(){
+        //ActivityCompat.requestPermissions((Activity)context, new String[]{Manifest.permission.WRITE_CALENDAR}, MY_PERMISSIONS_REQUEST_WRITE_CALENDAR);
+    }
 }

@@ -28,6 +28,7 @@ public class User {
         this.status = status;
     }
 
+
     public User(String user_id, String password) {
         this.user_id = user_id;
         this.password = password;
@@ -137,6 +138,21 @@ public class User {
             db.update(USER_TABLE, values,
                     USER_ID + "='"+ getUser_id() +"' AND "+
                     USER_PASSWORD +"='" + getPassword() + "'",
+                    null);
+        } catch (Exception e) {
+            Log.e("DB Error", e.toString());
+            e.printStackTrace();
+        }
+    }
+
+
+    public void update_Password() {
+        ContentValues values = new ContentValues();
+        values.put(USER_PASSWORD, getPassword());
+
+        try {
+            db.update(USER_TABLE, values,
+                    USER_ID + "='"+ getUser_id() + "'",
                     null);
         } catch (Exception e) {
             Log.e("DB Error", e.toString());

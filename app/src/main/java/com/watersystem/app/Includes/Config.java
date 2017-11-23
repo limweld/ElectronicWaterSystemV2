@@ -1,8 +1,5 @@
 package com.watersystem.app.Includes;
 
-/**
- * Created by Hilsoft on 23/06/2017.
- */
 import android.util.Log;
 
 import org.apache.http.HttpResponse;
@@ -21,6 +18,7 @@ public class Config {
     private String url_Rate_data;
     private String url_User_data;
     private String url_Update_Reading;
+    private String url_Change_Password;
 
     public void setUrl_Reading_data(String IP) {
         this.url_Reading_data = "http://"+IP+"/mssqlwater/mobile/reading_json.php";
@@ -38,6 +36,10 @@ public class Config {
         this.url_Update_Reading = "http://"+IP+"/mssqlwater/mobile/upload.php";
     }
 
+    public void setUrl_Change_Password(String IP){
+        this.url_Change_Password = "http://"+IP+"/mssqlwater/mobile/collector_changepass_json.php";
+    }
+
     public String getUrl_Reading_data() {
         return url_Reading_data;
     }
@@ -49,6 +51,8 @@ public class Config {
     public String getUrl_User_data() { return url_User_data; }
 
     public String getUrl_Update_Reading(){ return url_Update_Reading; }
+
+    public String getUrl_Change_Password(){ return url_Change_Password;}
 
     public Config() {
     }
@@ -90,6 +94,4 @@ public class Config {
         inputStream.close();
         return result;
     }
-
-
 }

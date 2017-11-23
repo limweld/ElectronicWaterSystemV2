@@ -37,6 +37,4 @@ dependencies {
     compile files('libs/BlueToothTool.jar')
     compile files('libs/core.jar')
     compile 'com.squareup.picasso:picasso:2.5.2'
-
-
 }

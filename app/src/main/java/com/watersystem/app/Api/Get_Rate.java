@@ -36,6 +36,9 @@ public class Get_Rate  extends AsyncTask<String, Void, String> {
 
             JSONArray rows = new JSONArray(result);
 
+            Rate delete_Rate = new Rate();
+            delete_Rate.delete_Rate();
+
             for(int i = 0; i < rows.length(); i++) {
 
                 String id =  rows.getJSONObject(i).getString("id");

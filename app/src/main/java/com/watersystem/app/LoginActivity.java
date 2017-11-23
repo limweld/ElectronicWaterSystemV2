@@ -20,12 +20,10 @@ import com.watersystem.app.Includes.Config;
 import com.watersystem.app.Includes.DataHandler;
 import com.watersystem.app.Includes.User;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import static com.watersystem.app.Includes.Config.getUrl;
-import static com.watersystem.app.R.id.config_ip;
 
 public class LoginActivity extends AppCompatActivity {
     final Context context = this;
@@ -49,11 +47,17 @@ public class LoginActivity extends AppCompatActivity {
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-            secondary_Open(
-                userID.getText().toString(),
-                password.getText().toString()
-            );
 
+            if(  userID.getText().toString().matches("") ||
+                 password.getText().toString().matches("") ) {
+                Toast.makeText(getApplicationContext() , "Required Inputs !"  , Toast.LENGTH_SHORT).show();
+            }else{
+
+                secondary_Open(
+                        userID.getText().toString(),
+                        password.getText().toString()
+                );
+            }
             }
         });
 

@@ -133,6 +133,17 @@ public class Rate {
         }
     }
 
+    public void delete_Rate(){
+        try {
+            db.delete(RATE_TABLE,null, null);}
+        catch (Exception e)
+        {
+            Log.e("DB ERROR", e.toString());
+            e.printStackTrace();
+        }
+
+    }
+
     public Rate get_Data_Rate(String id){
         Cursor cursor = db.query(RATE_TABLE,
                 new String[] {
